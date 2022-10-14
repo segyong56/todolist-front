@@ -1,17 +1,46 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+
+    <TodoInput />
+    <TodoList :todolist="todoList" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios'
+import TodoInput from './components/TodoInput.vue';
+import TodoList from './components/TodoList.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TodoInput,
+    TodoList,
+  },
+  data() {
+    return {
+      todoList: [],
+    }
+  },
+  watch: {
+    todoList: function(newVal) {
+      console.log(newVal)
+    }
+  },
+  methods: {
+    async getData() {
+
+      const { data } = await axios.get("http://localhost:8080/board/list")
+
+      if(data) {
+        this.todoList = data
+      }
+    
+    }
+  },
+
+  mounted() {
+    this.getData();
   }
 }
 </script>
